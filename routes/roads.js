@@ -136,19 +136,27 @@ router.get('/roadtitleadd',function (req, res) {
     );
 });
 router.post('/roadadd',function (req, res) {
-    var road = new Road();
-    road.set("Title", req.body.InputTitle.trim());
-    road.set("Content", req.body.InputContent.trim());
-    road.save(null, {
-            success: function (road) {
-                //res.send('true');
-                res.redirect("/roads/list");
-            },
-            error: function (road, error) {
-                res.send('���ʧ��');
+    var currentUser = AV.User.current();
+    var username;
+    if (currentUser) {
+        var road = new Road();
+        road.set("Title", req.body.InputTitle.trim());
+        road.set("Content", req.body.InputContent.trim());
+        road.set("UserId", currentUser.id);
+        road.save(null, {
+                success: function (road) {
+                    //res.send('true');
+                    res.redirect("/roads/list");
+                },
+                error: function (road, error) {
+                    res.send('���ʧ��');
+                }
             }
-        }
-    );
+        );
+    }
+    else{
+        res.redirect('/users/login');
+    }
 });
 router.post('/editroadtitle',function (req, res) {
     var query = new AV.Query(Road);
@@ -513,8 +521,9 @@ router.get('/myroad',function (req,res){
         var roads = new Array();
 
         var query = new AV.Query(Road);
+        query.equalTo("UserId",currentUser.id);
         query.descending("createdAt");
-        //query.equalTo("RoadId",req.params.id);
+
         query.find({
             success: function (results) {
                 //alert("Successfully retrieved " + results.length + " scores.");
@@ -619,7 +628,20 @@ router.get('/details/:id',function (req, res) {
                         point.type = object.get('Type');
                         point.title = object.get('Title');
                         point.content = object.get('Content');
+
+
+
+                        var querypi = new AV.Query(Point_Image);
+                        querypi.equalTo("PointId", point.id);
+                        querypi.find().then(function(images){
+                            point.imgcount=   images.length
+                            console.log(images.length);
+
+                        });
+
                         points.push(point);
+
+
                     }
                     res.render('roads/details', {
                         title: title,
