@@ -1,0 +1,50 @@
+<br/>
+<div class="row">
+    <div class="col-md-2">
+        <div class="list-group">
+            <a href="/users/info" class="list-group-item">
+                �ҵ���Ϣ
+            </a>
+            <a href="/users/changepassword" class="list-group-item">�޸�����</a>
+            <a href="/users/pwdreset?username=<%=user%>" target="_blank" class="list-group-item">��������</a>
+            <a href="/users/applyforedit" class="list-group-item  active">����༭</a>
+            <a href="/invitation/index" class="list-group-item">�ҵ�������</a>
+        </div>
+
+    </div>
+    <div class="col-md-10">
+        <%if(isedit){%>
+        <div class="alert alert-danger" role="alert">���Ѿ��б༭Ȩ�ޣ��������룡</div>
+        <%}else{%>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">���������������Ϊ��Ʒ�༭</h3>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal"  action="/users/applyforedit" method="post">
+
+                    <div class="form-group">
+                        <label for="invitationcode" class="col-sm-2 control-label">������</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="invitationcode" name="invitationcode" placeholder="������">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-default">ȷ��</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <%}%>
+
+
+
+
+
+    </div>
+</div>
+
+

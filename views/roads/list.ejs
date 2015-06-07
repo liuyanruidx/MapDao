@@ -1,0 +1,82 @@
+<ol class="breadcrumb">
+    <li><a href="/">首页</a></li>
+    <li><a href="/road/list">路线</a></li>
+    <li class="active"><%=title%></li>
+</ol>
+<div id="thumbnails" class="row">
+    <% for(var i = 0;i < roads.length;i++){%>
+    <div  class="span3 col-sm-6 col-md-4">
+
+        <div class="thumbnail">
+            <a href="/roads/details/<%= roads[i].id %>" target="_blank" >
+                <img src="/roads/getroadfirstimage/<%= roads[i].id %>?w=300&h=300" alt="..." width="100%" height="100%">
+            </a>
+
+            <div class="caption">
+                <h5><%= roads[i].title %></h5>
+                <hr>
+                <p><%= roads[i].content %></p>
+                <p style="font-size: 16px;text-align: right;color: grey">
+                    <span class="glyphicon glyphicon-star favorite" style="margin-right: 10px;" title="收藏" data-roadid="<%= roads[i].id %>"></span>
+                    <span class="glyphicon glyphicon-comment"style="margin-right: 10px;"></span>
+                    <span class="glyphicon glyphicon-share"style="margin-right: 10px;"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <%}%>
+
+</div>
+
+<script src='/javascripts/masonry/imagesloaded.pkgd.min.js'></script>
+<script type="text/javascript" src="/javascripts/masonry/masonry.pkgd.min.js"></script>
+<script type="text/javascript">
+    /* Demo Scripts for Making Twitter Bootstrap 3 Tab Play Nicely With The Masonry Library
+     * on SitePoint by Maria Antonietta Perna
+     */
+
+    //Initialize Masonry inside Bootstrap 3 Tab component
+    $(function(){
+
+//        $('#thumbnails').masonry({
+//            // options
+//            itemSelector: '.span3'
+//            //columnWidth: 200
+//        });
+
+        var $container = $('#thumbnails');
+        $container.imagesLoaded( function(){
+            $container.masonry({
+                itemSelector : '.span3'
+            });
+        });
+
+
+        $(".favorite").click(function(e){
+            //alert( $(e.target).data("roadid"))
+            var targetid=  $(e.target).data("roadid");
+
+            $.ajax({
+                type: "POST",
+                url: "/roads/favorite",
+                data: "TargetId="+targetid+"&Type=Road",
+                dataType: "json",
+                success: function (response) {
+
+                    if(response.msg="�ղسɹ�")
+                    {
+                        $(e.target).css("color","red")
+                    }
+                    else{
+                        alert(response.msg);
+
+                    }
+                    console.log(response);
+                }
+            });
+        });
+
+
+    });
+
+</script>

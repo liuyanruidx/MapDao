@@ -1,0 +1,63 @@
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="text-center"><%=title%></h3>
+        <img src="/roads/getroadfirstimage/<%=roadid %>" width="100%">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <hr/>
+    </div>
+</div>
+
+<% for(var i = 0;i < points.length;i++){ %>
+<%if(points[i].type=="文本"){%>
+<div class="row">
+    <div class="col-md-8">
+        <h4> <%= points[i].title %></h4>
+        <p><%- points[i].content %></p>
+
+    </div>
+    <div class="col-md-4">
+
+
+    </div>
+</div>
+<%}else{%>
+<div class="row">
+    <div class="col-md-8">
+        <div class="thumbnail">
+
+            <img src="/points/getpointfirstimage/<%= points[i].id+"?w=600&h=300&date="+new Date()%>" alt="..." width="100%">
+
+
+
+            <div class="caption">
+                <h4 class="text-center"><%= points[i].title %></h4>
+                <hr/>
+
+                <p><%- points[i].content %></p>
+                <hr/>
+
+                <p style="font-size: 16px;text-align: right;color: grey">
+                    <span class="glyphicon glyphicon-star" style="margin-right: 10px;" title="收藏"></span>
+                    <span class="glyphicon glyphicon-comment"style="margin-right: 10px;"></span>
+                    <span class="glyphicon glyphicon-share"style="margin-right: 10px;"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+
+
+    </div>
+</div>
+<%}%>
+<% } %>
+
+<style type="text/css">
+    .caption span,.caption p{
+        color: grey;
+        margin:0;
+    }
+</style>
