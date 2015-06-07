@@ -6,9 +6,10 @@ var AV = require('leanengine');
 var url = require('url');
 var Point = AV.Object.extend("Point");
 var Point_Image = AV.Object.extend("Point_Image");
-
-var url = require('url');
-
+var fs = require('fs');
+var path = require('path');
+var multipart = require('connect-multiparty');
+var multipartMiddleware = multipart();
 
 router.post('/pointadd',function (req, res) {
 
@@ -55,11 +56,11 @@ router.post('/editpointtitle',function (req, res) {
         }
     });
 });
-router.post('/editpointcontent',function (req, res) {
+router.post('/editpointcontent', multipartMiddleware,function (req, res,next) {
     //console.log(req)
 
     console.log("asdf")
-    console.log(req.body)
+    console.log(req.body.PointContentEditID)
 
 
     var query = new AV.Query(Point);
@@ -120,14 +121,14 @@ router.post('/editpointorder',function (req, res) {
         }
     });
 });
-router.post('/uploadpointimage',function (req, res) {
+router.post('/uploadpointimage', multipartMiddleware,function (req, res) {
 
     // var aaaa=req.query.pointid;
     console.log(req.body.PointID);
 
     var files = [].concat(req.files);
 
-    // console.log(files[0].file.path);
+     console.log(files);
 
 
     for (var i = 0; i < files.length; i++) {
@@ -212,7 +213,7 @@ router.get('/getpointfirstimage/:id',function (req, res) {
 
             }
             else {
-                imgurl = "/images/img1.png";
+                imgurl = "/images/default.jpg";
             }
 
             res.redirect(imgurl);

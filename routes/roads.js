@@ -9,7 +9,10 @@ var Road_Image = AV.Object.extend("Road_Image");
 var Point_Image = AV.Object.extend("Point_Image");
 var Favorite = AV.Object.extend("Favorite");
 var url = require('url');
-
+var fs = require('fs');
+var path = require('path');
+var multipart = require('connect-multiparty');
+var multipartMiddleware = multipart();
 router.get('/edit/:id',function (req, res) {
     var currentUser = AV.User.current();
     var username;
@@ -180,7 +183,7 @@ router.post('/editroadcontent',function (req, res) {
         }
     });
 });
-router.post('/uploadroadimage',function (req, res) {
+router.post('/uploadroadimage', multipartMiddleware,function (req, res) {
 
 
     console.log(req.body.RoadID);

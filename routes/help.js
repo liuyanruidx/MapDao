@@ -2,6 +2,7 @@
  * Created by ÑÓÈğ on 2015/6/7.
  */
 var router = require('express').Router();
+var AV = require('leanengine');
 
 router.get('/edithelp',function(req,res){
 
