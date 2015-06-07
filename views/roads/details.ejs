@@ -2,6 +2,7 @@
     <div class="col-md-12">
         <h3 class="text-center"><%=title%></h3>
         <img src="/roads/getroadfirstimage/<%=roadid %>" width="100%">
+        <p style="padding: 25px;line-height: 25px;text-indent: 2em;"><%=content%></p>
     </div>
 </div>
 <div class="row">
@@ -13,18 +14,20 @@
 <% for(var i = 0;i < points.length;i++){ %>
 <%if(points[i].type=="文本"){%>
 <div class="row">
+    <div class="col-md-2">
+    </div>
     <div class="col-md-8">
         <h4> <%= points[i].title %></h4>
         <p><%- points[i].content %></p>
 
     </div>
-    <div class="col-md-4">
-
-
+    <div class="col-md-2">
     </div>
 </div>
 <%}else{%>
 <div class="row">
+    <div class="col-md-2">
+    </div>
     <div class="col-md-8">
         <div class="thumbnail">
 
@@ -47,9 +50,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-
-
+    <div class="col-md-2">
     </div>
 </div>
 <%}%>
@@ -59,5 +60,6 @@
     .caption span,.caption p{
         color: grey;
         margin:0;
+        text-indent: 2em;
     }
 </style>
