@@ -17,7 +17,7 @@ var roads = require('./routes/roads');
 var points = require('./routes/points');
 var company = require('./routes/company');
 var help = require('./routes/help');
-var invation = require('./routes/invation');
+var invitation = require('./routes/invitation');
 
 var todos = require('./routes/todos');
 
@@ -52,7 +52,7 @@ app.use('/roads', roads);
 app.use('/points', points);
 app.use('/help', help);
 app.use('/company', company);
-app.use('/invation', invation);
+app.use('/invitation', invitation);
 
 // 可以将一类的路由单独保存在一个文件中
 app.use('/todos', todos);
