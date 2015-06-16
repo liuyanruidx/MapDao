@@ -11,35 +11,64 @@ var path = require('path');
 var multipart = require('connect-multiparty');
 var multipartMiddleware = multipart();
 
-router.post('/pointadd',function (req, res) {
-
+router.post('/pointadd', function (req, res) {
 
 
     var point = new Point();
 
     if (req.body.wenbenis == "true") {
         point.set("Type", "文本");
-
     }
     else {
         point.set("Type", "站点");
-
     }
     point.set("RoadId", req.body.RoadId);
     point.set("Title", req.body.InputTitle.trim());
     point.set("Content", req.body.InputContent.trim());
-    point.save(null, {
-            success: function (point) {
-                //res.send('true');
-                res.redirect("/roads/details/" + req.body.RoadId);
-            },
-            error: function (point, error) {
-                res.send('添加失败');
+
+
+    var query = new AV.Query(Point);
+    query.equalTo("RoadId", req.body.RoadId);
+    query.descending("Order");
+
+    query.first({
+        success: function (object) {
+            // Successfully retrieved the object.
+
+
+            var order = 1;
+            if (object != null) {
+
+                order = parseInt(object.get("Order")) + 1;
+
             }
+
+            // console.log(object);
+
+            point.set("Order", order);
+
+
+            point.save(null, {
+                    success: function (point) {
+                        //res.send('true');
+                        res.redirect("/roads/details/" + req.body.RoadId);
+                    },
+                    error: function (point, error) {
+                        res.send('添加失败');
+                    }
+                }
+            );
+
+
+        },
+        error: function (error) {
+            console.log("Error: " + error.code + " " + error.message);
         }
-    );
+    });
+
+
 });
-router.post('/editpointtitle',function (req, res) {
+router.post('/editpointtitle', function (req, res) {
 
     var query = new AV.Query(Point);
     query.get(req.body.PointID, {
@@ -56,7 +85,7 @@ router.post('/editpointtitle',function (req, res) {
         }
     });
 });
-router.post('/editpointcontent', multipartMiddleware,function (req, res,next) {
+router.post('/editpointcontent', multipartMiddleware, function (req, res, next) {
     //console.log(req)
 
     console.log("asdf")
@@ -78,7 +107,7 @@ router.post('/editpointcontent', multipartMiddleware,function (req, res,next) {
         }
     });
 });
-router.post('/editpointcontenttext',function (req, res) {
+router.post('/editpointcontenttext', function (req, res) {
     //console.log(req)
 
     console.log("asdf")
@@ -100,7 +129,7 @@ router.post('/editpointcontenttext',function (req, res) {
         }
     });
 });
-router.post('/editpointorder',function (req, res) {
+router.post('/editpointorder', function (req, res) {
     //console.log(req)
 
     console.log(req.body)
@@ -110,7 +139,7 @@ router.post('/editpointorder',function (req, res) {
     query.get(req.body.PointID.trim(), {
         success: function (point) {
             // The object was retrieved successfully.
-            point.set("Order",parseInt( req.body.Order.trim()));
+            point.set("Order", parseInt(req.body.Order.trim()));
             point.save();
             res.send('true');
         },
@@ -121,14 +150,14 @@ router.post('/editpointorder',function (req, res) {
         }
     });
 });
-router.post('/uploadpointimage', multipartMiddleware,function (req, res) {
+router.post('/uploadpointimage', multipartMiddleware, function (req, res) {
 
     // var aaaa=req.query.pointid;
     console.log(req.body.PointID);
 
     var files = [].concat(req.files);
 
-     console.log(files);
+    console.log(files);
 
 
     for (var i = 0; i < files.length; i++) {
@@ -156,7 +185,7 @@ router.post('/uploadpointimage', multipartMiddleware,function (req, res) {
     //console.log(data);
     res.send("true");
 });
-router.get('/getpointimage/:id',function (req, res) {
+router.get('/getpointimage/:id', function (req, res) {
 
 
     //var imgid=req.params.id;
@@ -165,7 +194,7 @@ router.get('/getpointimage/:id',function (req, res) {
     query.equalTo("PointId", req.params.id);
     query.find({
         success: function (results) {
-            //alert("Successfully retrieved " + results.length + " scores.");
+            //console.log("Successfully retrieved " + results.length + " scores.");
             // Do something with the returned AV.Object values
             for (var i = 0; i < results.length; i++) {
                 var object = results[i];
@@ -182,12 +211,12 @@ router.get('/getpointimage/:id',function (req, res) {
 
         },
         error: function (error) {
-            alert("Error: " + error.code + " " + error.message);
+            console.log("Error: " + error.code + " " + error.message);
         }
     });
 
 });
-router.get('/getpointfirstimage/:id',function (req, res) {
+router.get('/getpointfirstimage/:id', function (req, res) {
 
 
     var args = url.parse(req.url, true).query;
@@ -225,12 +254,12 @@ router.get('/getpointfirstimage/:id',function (req, res) {
 
         },
         error: function (error) {
-            //alert("Error: " + error.code + " " + error.message);
+            //console.log("Error: " + error.code + " " + error.message);
         }
     });
 
 });
-router.get('/getallimages',function (req,res){
+router.get('/getallimages', function (req, res) {
 
 
     var args = url.parse(req.url, true).query;
@@ -240,10 +269,10 @@ router.get('/getallimages',function (req,res){
     query.ascending("createdAt");
     query.find({
         success: function (results) {
-            //alert("Successfully retrieved " + results.length + " scores.");
+            //console.log("Successfully retrieved " + results.length + " scores.");
             // Do something with the returned AV.Object values
 
-            var imgs=new Array();
+            var imgs = new Array();
 
             for (var i = 0; i < results.length; i++) {
                 var object = results[i];
@@ -257,13 +286,13 @@ router.get('/getallimages',function (req,res){
             res.send(imgs);
         },
         error: function (error) {
-            // alert("Error: " + error.code + " " + error.message);
+            // console.log("Error: " + error.code + " " + error.message);
             res.send('false');
 
         }
     });
 });
-router.post('/deletepointimage',function (req,res){
+router.post('/deletepointimage', function (req, res) {
     var query = new AV.Query(Point_Image);
     query.get(req.body.ImageID, {
         success: function (img) {
@@ -285,7 +314,7 @@ router.post('/deletepointimage',function (req,res){
         }
     });
 });
-router.post('/setpositon',function (req, res) {
+router.post('/setpositon', function (req, res) {
 
     console.log(req.body.pointpositionpointid);
     console.log(req.body.pointpositionlongitude);
@@ -310,7 +339,7 @@ router.post('/setpositon',function (req, res) {
         }
     });
 });
-router.post('/deletepoint',function (req, res) {
+router.post('/deletepoint', function (req, res) {
     var query = new AV.Query(Point);
     query.get(req.body.PointID, {
         success: function (point) {
@@ -328,11 +357,38 @@ router.post('/deletepoint',function (req, res) {
 
                 },
                 error: function (error) {
-                    alert("Error: " + error.code + " " + error.message);
+                    console.log("Error: " + error.code + " " + error.message);
                 }
             });
             point.destroy({
                 success: function (myObject) {
+
+                    var roadid = myObject.get("RoadId");
+                    var order = parseInt(myObject.get("Order"));
+                    var querypoint = new AV.Query(Point);
+                    querypoint.equalTo("RoadId", roadid);
+                    querypoint.greaterThan("Order", order);
+                    querypoint.find({
+                        success: function (results) {
+
+                            for (var i = 0; i < results.length; i++) {
+                                var object = results[i];
+
+                                var neworder = parseInt(object.get("Order")) - 1;
+                                object.set('Order', neworder);
+                                object.save;
+                                //console.log(points);
+                            }
+
+                        },
+                        error: function (error) {
+                            console.log("Error: " + error.code + " " + error.message);
+
+
+                        }
+                    });
+
+
                     res.send('true');
                 },
                 error: function (myObject, error) {
@@ -347,7 +403,7 @@ router.post('/deletepoint',function (req, res) {
         }
     });
 });
-router.post('/getdetails',function (req, res) {
+router.post('/getdetails', function (req, res) {
     var query = new AV.Query(Point);
     query.get(req.body.id, {
         success: function (point) {
@@ -360,7 +416,7 @@ router.post('/getdetails',function (req, res) {
         }
     });
 });
-router.post('/getpointposition',function (req, res) {
+router.post('/getpointposition', function (req, res) {
     var query = new AV.Query(Point);
     query.get(req.body.id, {
         success: function (point) {
@@ -374,4 +430,4 @@ router.post('/getpointposition',function (req, res) {
     });
 
 });
-module.exports=router;
+module.exports = router;

@@ -1,6 +1,6 @@
 <ol class="breadcrumb">
-    <li><a href="/">��ҳ</a></li>
-    <li><a href="/roads/list">·��</a></li>
+    <li><a href="/">首页</a></li>
+    <li><a href="/roads/list">路线</a></li>
     <li class="active"><%= title %></li>
 </ol>
 
@@ -48,14 +48,14 @@
 </style>
 <!-- ���벿��begin -->
 <h3 style="text-align: center;"><%= title %></h3>
-<h5 style="text-align: center;color: #4f4c4c">ע���϶���������</h5>
+<h5 style="text-align: center;color: #4f4c4c">拖动进行排序</h5>
 <div class="item_content">
     <ul id="abc" class="point_ul">
 
         <% for(var i = 0;i < points.length;i++){ %>
 
 
-        <%if(points[i].type=="�ı�"){%>
+        <%if(points[i].type=="文本"){%>
 
         <li id="<%= i+1 %>>">
             <div class="item"  data-pointid="<%= points[i].id %>" data-order="<%= points[i].order %>" style="background-color: #c67605">
@@ -98,7 +98,7 @@
 <br/>
 <div class="row">
     <div class="col-md-12">
-        <button class="btn btn-default" onclick="getchild()">��������</button>
+        <button class="btn btn-default" onclick="getchild()">确定保存</button>
 
     </div>
 </div>
@@ -297,12 +297,12 @@
                     });
                 }
             });
-            alert("����ɹ���")
+            alert("保存成功")
 
         }
         catch(e)
         {
-            alert("����ʧ�ܣ�")
+            alert("保存失败")
         }
 
     };
